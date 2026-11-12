@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TradeOS - Voice POS</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="mobile-screen">
+
+        <header class="top-nav">
+            <h1>TradeOS</h1>
+            <p class="subtitle">Boliye aur Hisab Kijiye</p>
+        </header>
+
+        <main class="action-area">
+            <button id="mic-btn" class="mic-button">
+                🎙️ Tap to Speak
+            </button>
+            <p id="status-text" class="status-msg">Sunne ke liye mic dabayein</p>
+        </main>
+
+        <section class="log-area">
+            <p id="live-text">Aapka item yahan dikhega...</p>
+        </section>
+
+        <section class="summary-card">
+            <h2>Bill Summary</h2>
+            <div class="bill-row">
+                <span>Item Name:</span>
+                <strong id="item-name">--</strong>
+            </div>
+            <div class="bill-row">
+                <span>Quantity:</span>
+                <strong id="item-qty">--</strong>
+            </div>
+            <div class="bill-row">
+                <span>Total Price:</span>
+                <strong id="item-total" class="gold-text">0 PKR</strong>
+            </div>
+        </section>
+
+        <footer class="action-buttons">
+            <button id="add-btn" class="btn-secondary">➕ Naya Item Jodein</button>
+            <button id="save-btn" class="btn-primary">💾 Bill Save / Print</button>
+        </footer>
+
+    </div>
+
+</body>
+</html>
