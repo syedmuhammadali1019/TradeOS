@@ -1,0 +1,165 @@
+/* --- Global Reset & Golden Luxury Dark Theme --- */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+body {
+    background-color: #0D0D0D; /* Obsidian Black Background */
+    color: #FFFFFF; /* Soft White Text */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+/* Mobile Screen Container */
+.mobile-screen {
+    width: 100%;
+    max-width: 400px;
+    background-color: #121212;
+    border: 1px solid #222222;
+    border-radius: 24px;
+    padding: 24px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* 1. Top Navigation */
+.top-nav {
+    text-align: center;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #222222;
+}
+
+.top-nav h1 {
+    color: #D4AF37; /* Muted Gold */
+    font-size: 28px;
+    font-weight: 700;
+    letter-spacing: 1px;
+}
+
+.subtitle {
+    color: #AAAAAA;
+    font-size: 13px;
+    margin-top: 4px;
+}
+
+/* 2. Main Action Area (Mic Button) */
+.action-area {
+    text-align: center;
+    padding: 15px 0;
+}
+
+.mic-button {
+    background-color: #D4AF37; /* Muted Gold */
+    color: #0D0D0D;
+    font-size: 18px;
+    font-weight: 700;
+    padding: 16px 28px;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(212, 175, 55, 0.4);
+    transition: transform 0.2s ease, background-color 0.2s ease;
+}
+
+.mic-button:hover {
+    background-color: #E6C657;
+    transform: scale(1.03);
+}
+
+.status-msg {
+    color: #888888;
+    font-size: 12px;
+    margin-top: 10px;
+}
+
+/* 3. Real-Time Text Log Area */
+.log-area {
+    background-color: #1A1A1A;
+    border: 1px solid #333333;
+    border-radius: 12px;
+    padding: 14px;
+    text-align: center;
+}
+
+#live-text {
+    color: #CCCCCC;
+    font-size: 14px;
+    font-style: italic;
+}
+
+/* 4. Quick Summary Card */
+.summary-card {
+    background-color: #181818;
+    border: 1px solid #2A2A2A;
+    border-radius: 16px;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.summary-card h2 {
+    font-size: 16px;
+    color: #D4AF37;
+    border-bottom: 1px solid #2A2A2A;
+    padding-bottom: 8px;
+}
+
+.bill-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 14px;
+    color: #DDDDDD;
+}
+
+.gold-text {
+    color: #D4AF37;
+    font-size: 16px;
+}
+
+/* 5. Clean Action Buttons */
+.action-buttons {
+    display: flex;
+    gap: 10px;
+}
+
+.btn-secondary {
+    flex: 1;
+    background-color: #222222;
+    color: #FFFFFF;
+    border: 1px solid #444444;
+    padding: 12px;
+    border-radius: 12px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.btn-secondary:hover {
+    background-color: #333333;
+}
+
+.btn-primary {
+    flex: 1;
+    background-color: #D4AF37;
+    color: #0D0D0D;
+    border: none;
+    padding: 12px;
+    border-radius: 12px;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.btn-primary:hover {
+    background-color: #E6C657;
+}
