@@ -2,9 +2,12 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TradeOS - AI Mobile POS</title>
     <style>
+        /* ==========================================
+           ORIGINAL STEP 1: TRADEOS MOBILE LAYOUT CSS
+           ========================================== */
         * {
             box-sizing: border-box;
             margin: 0;
@@ -19,249 +22,270 @@
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            padding: 12px;
         }
 
         .app-container {
             width: 100%;
             max-width: 400px;
-            background-color: #111827;
-            border-radius: 24px;
-            border: 1px solid #1f2937;
-            padding: 24px 20px;
+            background-color: #0b0f19;
+            min-height: 100vh;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            min-height: 680px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            padding: 20px 16px;
         }
 
         /* Top Header */
-        .header {
+        .app-header {
             text-align: center;
-            margin-bottom: 20px;
+            margin-bottom: 16px;
         }
 
-        .header h1 {
-            font-size: 32px;
+        .app-title {
+            font-size: 26px;
             font-weight: 800;
-            color: #f59e0b;
+            color: #f3c653;
             letter-spacing: 0.5px;
-            margin-bottom: 4px;
+            margin-bottom: 2px;
         }
 
-        .header p {
-            font-size: 14px;
-            color: #9ca3af;
+        .app-subtitle {
+            font-size: 13px;
+            color: #94a3b8;
+            font-weight: 500;
         }
 
-        /* Main Mic Action Area */
-        .mic-section {
+        /* Main Action Area (Mic Button) */
+        .main-action-area {
             display: flex;
             flex-direction: column;
             align-items: center;
-            margin-bottom: 20px;
+            margin-bottom: 14px;
         }
 
-        .mic-btn {
-            background: linear-gradient(135deg, #f59e0b, #d97706);
-            color: #111827;
+        .big-mic-btn {
+            width: 100%;
+            max-width: 260px;
+            padding: 16px 20px;
+            border-radius: 35px;
             border: none;
-            border-radius: 40px;
-            padding: 14px 28px;
-            font-size: 18px;
+            background: linear-gradient(135deg, #f3c653, #d99b1a);
+            color: #0b0f19;
+            font-size: 17px;
             font-weight: 700;
             display: flex;
             align-items: center;
+            justify-content: center;
             gap: 10px;
             cursor: pointer;
-            box-shadow: 0 0 20px rgba(245, 158, 11, 0.4);
+            box-shadow: 0 0 20px rgba(243, 198, 83, 0.35);
             transition: all 0.3s ease;
         }
 
-        .mic-btn.recording {
-            background: linear-gradient(135deg, #ef4444, #dc2626);
+        .big-mic-btn svg {
+            width: 20px;
+            height: 20px;
+            fill: currentColor;
+        }
+
+        /* Recording Active State */
+        .big-mic-btn.recording {
+            background: linear-gradient(135deg, #ef4444, #b91c1c);
             color: #ffffff;
-            box-shadow: 0 0 25px rgba(239, 68, 68, 0.6);
-            transform: scale(1.03);
+            box-shadow: 0 0 25px rgba(239, 68, 68, 0.5);
+            animation: pulse-red 1.2s infinite;
         }
 
         .mic-status-text {
-            margin-top: 10px;
-            font-size: 13px;
-            color: #9ca3af;
+            margin-top: 8px;
+            font-size: 12px;
+            color: #94a3b8;
             font-weight: 500;
-            min-height: 18px;
         }
 
-        /* Live Text Log Input Area */
-        .text-input-container {
-            margin-bottom: 20px;
-        }
-
-        .live-textarea {
+        /* Real-time Text Log Area */
+        .text-log-area {
             width: 100%;
-            height: 90px;
-            background-color: #1f2937;
-            border: 1px solid #374151;
-            border-radius: 14px;
-            padding: 14px;
+            background-color: #161e2e;
+            border: 1px solid #27354f;
+            border-radius: 12px;
+            padding: 12px;
             color: #f8fafc;
-            font-size: 16px;
+            font-size: 15px;
+            line-height: 1.4;
+            min-height: 100px;
+            max-height: 120px;
             resize: none;
             outline: none;
-            text-align: center;
-            line-height: 1.4;
+            margin-bottom: 14px;
+            direction: rtl;
+            text-align: right;
         }
 
-        .live-textarea:focus {
-            border-color: #f59e0b;
+        .text-log-area:focus {
+            border-color: #f3c653;
         }
 
-        .live-textarea::placeholder {
-            color: #6b7280;
-        }
-
-        /* Bill Summary Card */
+        /* Quick Summary Card */
         .summary-card {
             background-color: #161e2e;
-            border: 1px solid #1f2937;
-            border-radius: 16px;
-            padding: 18px;
-            margin-bottom: 20px;
+            border: 1px solid #27354f;
+            border-radius: 14px;
+            padding: 14px 16px;
+            margin-bottom: 14px;
         }
 
-        .summary-title {
-            font-size: 18px;
+        .summary-card-title {
+            font-size: 15px;
             font-weight: 700;
-            color: #f59e0b;
-            margin-bottom: 12px;
-            padding-bottom: 8px;
-            border-bottom: 1px solid #1f2937;
+            color: #f3c653;
+            margin-bottom: 10px;
+            padding-bottom: 6px;
+            border-bottom: 1px solid #27354f;
         }
 
         .summary-row {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 10px;
-            font-size: 15px;
-            color: #d1d5db;
+            margin-bottom: 8px;
+            font-size: 13px;
+            color: #94a3b8;
         }
 
         .summary-row:last-child {
             margin-bottom: 0;
+            padding-top: 4px;
             font-weight: 700;
+            font-size: 15px;
             color: #f8fafc;
-            font-size: 17px;
-            margin-top: 4px;
         }
 
         .summary-row span:last-child {
-            color: #f59e0b;
+            color: #f8fafc;
+            font-weight: 600;
         }
 
-        /* Bottom Clean Action Buttons */
-        .bottom-actions {
+        .summary-row:last-child span:last-child {
+            color: #f3c653;
+            font-size: 17px;
+        }
+
+        /* Clean Action Buttons */
+        .action-buttons-bar {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 12px;
+            gap: 10px;
         }
 
-        .action-btn {
-            padding: 14px 12px;
+        .btn-action {
+            padding: 12px 10px;
             border-radius: 12px;
-            font-size: 14px;
+            font-size: 13px;
             font-weight: 600;
             cursor: pointer;
-            border: 1px solid #374151;
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 6px;
-            transition: opacity 0.2s;
+            transition: transform 0.2s;
         }
 
-        .action-btn:active {
-            opacity: 0.8;
+        .btn-action:active {
+            transform: scale(0.97);
         }
 
-        .btn-naya-item {
-            background-color: #1f2937;
+        .btn-secondary {
+            background-color: #161e2e;
             color: #f8fafc;
+            border: 1px solid #27354f;
         }
 
-        .btn-save-print {
-            background: linear-gradient(135deg, #f59e0b, #d97706);
-            color: #111827;
+        .btn-primary {
+            background: linear-gradient(135deg, #f3c653, #d99b1a);
+            color: #0b0f19;
             border: none;
             font-weight: 700;
+        }
+
+        @keyframes pulse-red {
+            0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.6); }
+            70% { box-shadow: 0 0 0 16px rgba(239, 68, 68, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
         }
     </style>
 </head>
 <body>
 
 <div class="app-container">
-    <!-- Header -->
-    <header class="header">
-        <h1>TradeOS</h1>
-        <p>Boliye aur Hisab Kijiye</p>
+    <!-- Header Section -->
+    <header class="app-header">
+        <h1 class="app-title">TradeOS</h1>
+        <p class="app-subtitle">Boliye aur Hisab Kijiye</p>
     </header>
 
-    <!-- Main Mic Action Area -->
-    <section class="mic-section">
-        <button class="mic-btn" id="micBtn" aria-label="Tap to Speak">
-            <span>🎙️</span> <span id="micBtnText">Tap to Speak</span>
+    <!-- Main Action Area: Step 2 Voice Engine UI -->
+    <section class="main-action-area">
+        <button class="big-mic-btn" id="micBtn" aria-label="Tap to Speak">
+            <svg viewBox="0 0 24 24">
+                <path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3zm5.91-3c-.49 0-.9.36-.98.85C16.52 14.2 14.47 16 12 16s-4.52-1.8-4.93-4.15c-.08-.49-.49-.85-.98-.85-.61 0-1.09.54-1 1.14.49 3 2.89 5.35 5.91 5.78V20c0 .55.45 1 1 1s1-.45 1-1v-2.08c3.02-.43 5.42-2.78 5.91-5.78.1-.6-.39-1.14-1-1.14z"/>
+            </svg>
+            <span id="micBtnText">Tap to Speak</span>
         </button>
-        <div class="mic-status-text" id="micStatusText">Mic ready hai, dabayein...</div>
+        <p class="mic-status-text" id="micHint">Aawaz sunne ke liye taiyar hai...</p>
     </section>
 
-    <!-- Real-time Text Log Area -->
-    <section class="text-input-container">
+    <!-- Real-time Text Log Area (Urdu Spoken Words Live) -->
+    <section>
         <textarea 
             id="voiceLogInput" 
-            class="live-textarea" 
-            placeholder="Yahan bola hua text live aayega..."></textarea>
+            class="text-log-area" 
+            placeholder="Yahan bola hua text aayega..."></textarea>
     </section>
 
     <!-- Quick Summary Card -->
     <section class="summary-card">
-        <div class="summary-title">Bill Summary</div>
+        <h3 class="summary-card-title">Bill Summary</h3>
         <div class="summary-row">
             <span>Item Name:</span>
-            <span id="summaryItem">--</span>
+            <span id="summaryItemName">--</span>
         </div>
         <div class="summary-row">
             <span>Quantity:</span>
-            <span id="summaryQty">--</span>
+            <span id="summaryQuantity">--</span>
         </div>
         <div class="summary-row">
             <span>Total Price:</span>
-            <span id="summaryPrice">0 PKR</span>
+            <span id="summaryTotalPrice">0 PKR</span>
         </div>
     </section>
 
-    <!-- Bottom Clean Action Buttons -->
-    <footer class="bottom-actions">
-        <button class="action-btn btn-naya-item" id="nayaItemBtn">
+    <!-- Clean Action Buttons -->
+    <footer class="action-buttons-bar">
+        <button class="btn-action btn-secondary" id="newItemBtn">
             <span>➕</span> Naya Item Jodein
         </button>
-        <button class="action-btn btn-save-print" id="savePrintBtn">
+        <button class="btn-action btn-primary" id="savePrintBtn">
             <span>💾</span> Bill Save / Print
         </button>
     </footer>
 </div>
 
+<!-- ==========================================
+     STEP 2: VOICE ENGINE JAVASCRIPT INTEGRATION
+     ========================================== -->
 <script>
-    // DOM Elements
     const micBtn = document.getElementById('micBtn');
     const micBtnText = document.getElementById('micBtnText');
-    const micStatusText = document.getElementById('micStatusText');
+    const micHint = document.getElementById('micHint');
     const voiceLogInput = document.getElementById('voiceLogInput');
-    const nayaItemBtn = document.getElementById('nayaItemBtn');
+    const newItemBtn = document.getElementById('newItemBtn');
     const savePrintBtn = document.getElementById('savePrintBtn');
 
-    // Web Speech API Integration Setup
+    const summaryItemName = document.getElementById('summaryItemName');
+    const summaryQuantity = document.getElementById('summaryQuantity');
+    const summaryTotalPrice = document.getElementById('summaryTotalPrice');
+
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
     let recognition = null;
     let isRecording = false;
@@ -271,14 +295,13 @@
         recognition = new SpeechRecognition();
         recognition.continuous = true;
         recognition.interimResults = true;
-        recognition.lang = 'ur-PK'; // Supports Urdu / English mixed retail speech
+        recognition.lang = 'ur-PK'; // Urdu / English mixed support
 
         recognition.onstart = () => {
             isRecording = true;
             micBtn.classList.add('recording');
             micBtnText.textContent = 'Listening...';
-            micStatusText.textContent = 'Aawaz sun li gayi hai!';
-            micStatusText.style.color = '#ef4444';
+            micHint.textContent = 'Aawaz sun li gayi hai! Bolte jayein...';
         };
 
         recognition.onresult = (event) => {
@@ -291,14 +314,13 @@
                     interimTranscript += transcript;
                 }
             }
-            // Display live text in textarea
             voiceLogInput.value = finalTranscript + (interimTranscript ? ' ' + interimTranscript : '');
             voiceLogInput.scrollTop = voiceLogInput.scrollHeight;
         };
 
         recognition.onerror = (event) => {
             console.error('Speech recognition error:', event.error);
-            micStatusText.textContent = 'Error: ' + event.error;
+            micHint.textContent = 'Error: ' + event.error;
             stopRecordingUI();
         };
 
@@ -306,20 +328,18 @@
             stopRecordingUI();
         };
     } else {
-        micStatusText.textContent = 'Browser Speech API supported nahi hai!';
+        micHint.textContent = 'Browser speech not supported. Use Google Chrome.';
         micBtn.disabled = true;
-        micBtn.style.opacity = '0.5';
+        micBtn.style.opacity = '0.6';
     }
 
     function stopRecordingUI() {
         isRecording = false;
         micBtn.classList.remove('recording');
         micBtnText.textContent = 'Tap to Speak';
-        micStatusText.textContent = 'Mic ready hai, dabayein...';
-        micStatusText.style.color = '#9ca3af';
+        micHint.textContent = 'Aawaz sunne ke liye taiyar hai...';
     }
 
-    // Mic Button Click Event with Error/State handling
     micBtn.addEventListener('click', () => {
         if (!recognition) return;
 
@@ -335,23 +355,21 @@
         }
     });
 
-    // Naya Item Button functionality (Clears log for next item)
-    nayaItemBtn.addEventListener('click', () => {
+    newItemBtn.addEventListener('click', () => {
         finalTranscript = '';
         voiceLogInput.value = '';
-        document.getElementById('summaryItem').textContent = '--';
-        document.getElementById('summaryQty').textContent = '--';
-        document.getElementById('summaryPrice').textContent = '0 PKR';
-        micStatusText.textContent = 'Naya item bolne ke liye mic dabayein';
+        summaryItemName.textContent = '--';
+        summaryQuantity.textContent = '--';
+        summaryTotalPrice.textContent = '0 PKR';
+        micHint.textContent = 'Naya item shuru kiya gaya hai.';
     });
 
-    // Save / Print Button functionality
     savePrintBtn.addEventListener('click', () => {
         if (!voiceLogInput.value.trim()) {
             alert('Pehle kuch bol kar bill mein item add karein!');
             return;
         }
-        alert('Bill successfully save / print ho gaya hai! (Next step: Smart Parser Engine)');
+        alert('Bill successfully saved / printed! (Agle step mein Smart Parser aayega)');
     });
 </script>
 
