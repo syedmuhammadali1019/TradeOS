@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TradeOS - AI Mobile POS</title>
     <style>
-        /* --- Global Reset & Golden Luxury Dark Theme --- */
+        /* --- Global Reset & Golden Luxury Dark Theme (Setup 1 & 2) --- */
         * {
             margin: 0;
             padding: 0;
@@ -80,7 +80,7 @@
             transform: scale(1.03);
         }
 
-        /* Mic Button Recording State with Yellow Glowing Pulse Animation */
+        /* Mic Button Recording State with Yellow Glowing Pulse Animation (Setup 2) */
         .mic-button.recording {
             background-color: #D4AF37 !important;
             color: #0D0D0D !important;
@@ -206,7 +206,7 @@
             <p id="live-text">हां भाई पांच किलो वाला डाल दे</p>
         </div>
 
-        <!-- Quick Summary Card -->
+        <!-- Quick Summary Card (Updated by Setup 3 Parser) -->
         <div class="summary-card">
             <h2>Bill Summary</h2>
             <div class="bill-row">
@@ -230,13 +230,17 @@
         </div>
     </div>
 
-    <!-- JavaScript for Web Speech API & Glowing Pulse Animation -->
+    <!-- JavaScript: Web Speech API (Setup 2) + Smart Voice Parser Engine (Setup 3) -->
     <script>
         const micBtn = document.getElementById('micBtn');
         const statusMsg = document.getElementById('statusMsg');
         const liveText = document.getElementById('live-text');
         const newItemBtn = document.getElementById('newItemBtn');
         const saveBtn = document.getElementById('saveBtn');
+
+        const itemNameElem = document.getElementById('itemName');
+        const itemQtyElem = document.getElementById('itemQty');
+        const totalPriceElem = document.getElementById('totalPrice');
 
         const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
         let recognition = null;
@@ -261,6 +265,9 @@
                     transcript += event.results[i][0].transcript;
                 }
                 liveText.textContent = transcript;
+                
+                // --- SETUP 3: SMART VOICE PARSER ENGINE ---
+                parseVoiceInput(transcript);
             };
 
             recognition.onerror = (event) => {
@@ -275,6 +282,35 @@
         } else {
             statusMsg.textContent = 'Speech Recognition not supported in this browser.';
             micBtn.disabled = true;
+        }
+
+        // Smart Parser Function to extract Quantity and calculate amounts
+        function parseVoiceInput(text) {
+            let lowerText = text.toLowerCase();
+            
+            // Extract numbers (quantity or price) using regex
+            let numbers = lowerText.match(/\d+/g);
+            let qty = '--';
+            let price = 0;
+
+            if (numbers && numbers.length > 0) {
+                qty = numbers[0] + ' kg / unit';
+                // Dummy smart price calculation example (e.g., qty * 150 PKR per unit if price not explicitly stated)
+                price = parseInt(numbers[0]) * 150; 
+            }
+
+            // Simple item detection keywords
+            let detectedItem = 'General Item';
+            if (lowerText.includes('chini') || lowerText.includes('चीनी')) detectedItem = 'Chini (Sugar)';
+            else if (lowerText.includes('doodh') || lowerText.includes('दूध')) detectedItem = 'Doodh (Milk)';
+            else if (lowerText.includes('daal') || lowerText.includes('दाल')) detectedItem = 'Daal';
+            else if (lowerText.includes('chawal') || lowerText.includes('चावल')) detectedItem = 'Chawal (Rice)';
+            else if (text.trim().length > 0) detectedItem = text.slice(0, 20) + '...';
+
+            // Update UI with parsed values
+            itemNameElem.textContent = detectedItem;
+            itemQtyElem.textContent = qty;
+            totalPriceElem.textContent = price + ' PKR';
         }
 
         function stopUI() {
@@ -299,9 +335,9 @@
 
         newItemBtn.addEventListener('click', () => {
             liveText.textContent = 'Naya item shuru kiya gaya hai...';
-            document.getElementById('itemName').textContent = '--';
-            document.getElementById('itemQty').textContent = '--';
-            document.getElementById('totalPrice').textContent = '0 PKR';
+            itemNameElem.textContent = '--';
+            itemQtyElem.textContent = '--';
+            totalPriceElem.textContent = '0 PKR';
         });
 
         saveBtn.addEventListener('click', () => {
