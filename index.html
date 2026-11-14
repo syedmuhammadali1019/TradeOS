@@ -3,51 +3,310 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TradeOS - Voice POS</title>
-    <link rel="stylesheet" href="style.css">
+    <title>TradeOS - AI Mobile POS</title>
+    <style>
+        /* --- Global Reset & Golden Luxury Dark Theme --- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: #0D0D0D; /* Obsidian Black Background */
+            color: #FFFFFF; /* Soft White Text */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        /* Mobile Screen Container */
+        .mobile-screen {
+            width: 100%;
+            max-width: 400px;
+            background-color: #121212;
+            border: 1px solid #222222;
+            border-radius: 24px;
+            padding: 24px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        /* 1. Top Navigation */
+        .top-nav {
+            text-align: center;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #222222;
+        }
+
+        .top-nav h1 {
+            color: #D4AF37; /* Muted Gold */
+            font-size: 28px;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+
+        .subtitle {
+            color: #AAAAAA;
+            font-size: 13px;
+            margin-top: 4px;
+        }
+
+        /* 2. Main Action Area (Mic Button) */
+        .action-area {
+            text-align: center;
+            padding: 15px 0;
+        }
+
+        .mic-button {
+            background-color: #D4AF37; /* Muted Gold */
+            color: #0D0D0D;
+            font-size: 18px;
+            font-weight: 700;
+            padding: 16px 28px;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.4);
+            transition: transform 0.2s ease, background-color 0.2s ease;
+        }
+
+        .mic-button:hover {
+            background-color: #E6C657;
+            transform: scale(1.03);
+        }
+
+        /* Mic Button Recording State with Yellow Glowing Pulse Animation */
+        .mic-button.recording {
+            background-color: #D4AF37 !important;
+            color: #0D0D0D !important;
+            box-shadow: 0 0 25px rgba(212, 175, 55, 0.8);
+            animation: pulse-yellow 1.2s infinite;
+        }
+
+        @keyframes pulse-yellow {
+            0% { box-shadow: 0 0 0 0 rgba(212, 175, 55, 0.9); }
+            70% { box-shadow: 0 0 0 24px rgba(212, 175, 55, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(212, 175, 55, 0); }
+        }
+
+        .status-msg {
+            color: #888888;
+            font-size: 12px;
+            margin-top: 10px;
+        }
+
+        /* 3. Real-Time Text Log Area */
+        .log-area {
+            background-color: #1A1A1A;
+            border: 1px solid #333333;
+            border-radius: 12px;
+            padding: 14px;
+            text-align: center;
+        }
+
+        #live-text {
+            color: #CCCCCC;
+            font-size: 14px;
+            font-style: italic;
+        }
+
+        /* 4. Quick Summary Card */
+        .summary-card {
+            background-color: #181818;
+            border: 1px solid #2A2A2A;
+            border-radius: 16px;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .summary-card h2 {
+            font-size: 16px;
+            color: #D4AF37;
+            border-bottom: 1px solid #2A2A2A;
+            padding-bottom: 8px;
+        }
+
+        .bill-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 14px;
+            color: #DDDDDD;
+        }
+
+        .gold-text {
+            color: #D4AF37;
+            font-size: 16px;
+        }
+
+        /* 5. Clean Action Buttons */
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn-secondary {
+            flex: 1;
+            background-color: #222222;
+            color: #FFFFFF;
+            border: 1px solid #444444;
+            padding: 12px;
+            border-radius: 12px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .btn-secondary:hover {
+            background-color: #333333;
+        }
+
+        .btn-primary {
+            flex: 1;
+            background-color: #D4AF37;
+            color: #0D0D0D;
+            border: none;
+            padding: 12px;
+            border-radius: 12px;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .btn-primary:hover {
+            background-color: #E6C657;
+        }
+    </style>
 </head>
 <body>
 
     <div class="mobile-screen">
-
-        <header class="top-nav">
+        <!-- Top Navigation -->
+        <div class="top-nav">
             <h1>TradeOS</h1>
-            <p class="subtitle">Boliye aur Hisab Kijiye</p>
-        </header>
+            <div class="subtitle">Boliye aur Hisab Kijiye</div>
+        </div>
 
-        <main class="action-area">
-            <button id="mic-btn" class="mic-button">
-                🎙️ Tap to Speak
-            </button>
-            <p id="status-text" class="status-msg">Sunne ke liye mic dabayein</p>
-        </main>
+        <!-- Main Action Area (Mic Button) -->
+        <div class="action-area">
+            <button id="micBtn" class="mic-button">🎙️ Tap to Speak</button>
+            <div id="statusMsg" class="status-msg">Aawaz sun li gayi hai!</div>
+        </div>
 
-        <section class="log-area">
-            <p id="live-text">Aapka item yahan dikhega...</p>
-        </section>
+        <!-- Real-Time Text Log Area -->
+        <div class="log-area">
+            <p id="live-text">हां भाई पांच किलो वाला डाल दे</p>
+        </div>
 
-        <section class="summary-card">
+        <!-- Quick Summary Card -->
+        <div class="summary-card">
             <h2>Bill Summary</h2>
             <div class="bill-row">
                 <span>Item Name:</span>
-                <strong id="item-name">--</strong>
+                <span id="itemName">--</span>
             </div>
             <div class="bill-row">
                 <span>Quantity:</span>
-                <strong id="item-qty">--</strong>
+                <span id="itemQty">--</span>
             </div>
-            <div class="bill-row">
+            <div class="bill-row" style="font-weight: 700;">
                 <span>Total Price:</span>
-                <strong id="item-total" class="gold-text">0 PKR</strong>
+                <span id="totalPrice" class="gold-text">0 PKR</span>
             </div>
-        </section>
+        </div>
 
-        <footer class="action-buttons">
-            <button id="add-btn" class="btn-secondary">➕ Naya Item Jodein</button>
-            <button id="save-btn" class="btn-primary">💾 Bill Save / Print</button>
-        </footer>
-
+        <!-- Clean Action Buttons -->
+        <div class="action-buttons">
+            <button id="newItemBtn" class="btn-secondary">➕ Naya Item Jodein</button>
+            <button id="saveBtn" class="btn-primary">💾 Bill Save / Print</button>
+        </div>
     </div>
-<script src="script.js"></script>  
+
+    <!-- JavaScript for Web Speech API & Glowing Pulse Animation -->
+    <script>
+        const micBtn = document.getElementById('micBtn');
+        const statusMsg = document.getElementById('statusMsg');
+        const liveText = document.getElementById('live-text');
+        const newItemBtn = document.getElementById('newItemBtn');
+        const saveBtn = document.getElementById('saveBtn');
+
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        let recognition = null;
+        let isRecording = false;
+
+        if (SpeechRecognition) {
+            recognition = new SpeechRecognition();
+            recognition.continuous = true;
+            recognition.interimResults = true;
+            recognition.lang = 'ur-PK'; // Urdu / English mixed support
+
+            recognition.onstart = () => {
+                isRecording = true;
+                micBtn.classList.add('recording');
+                micBtn.textContent = 'Listening...';
+                statusMsg.textContent = 'Sun raha hoon...';
+            };
+
+            recognition.onresult = (event) => {
+                let transcript = '';
+                for (let i = event.resultIndex; i < event.results.length; ++i) {
+                    transcript += event.results[i][0].transcript;
+                }
+                liveText.textContent = transcript;
+            };
+
+            recognition.onerror = (event) => {
+                console.error('Speech error:', event.error);
+                statusMsg.textContent = 'Error: ' + event.error;
+                stopUI();
+            };
+
+            recognition.onend = () => {
+                stopUI();
+            };
+        } else {
+            statusMsg.textContent = 'Speech Recognition not supported in this browser.';
+            micBtn.disabled = true;
+        }
+
+        function stopUI() {
+            isRecording = false;
+            micBtn.classList.remove('recording');
+            micBtn.textContent = '🎙️ Tap to Speak';
+            statusMsg.textContent = 'Aawaz sun li gayi hai!';
+        }
+
+        micBtn.addEventListener('click', () => {
+            if (!recognition) return;
+            if (isRecording) {
+                recognition.stop();
+            } else {
+                try {
+                    recognition.start();
+                } catch (e) {
+                    console.error(e);
+                }
+            }
+        });
+
+        newItemBtn.addEventListener('click', () => {
+            liveText.textContent = 'Naya item shuru kiya gaya hai...';
+            document.getElementById('itemName').textContent = '--';
+            document.getElementById('itemQty').textContent = '--';
+            document.getElementById('totalPrice').textContent = '0 PKR';
+        });
+
+        saveBtn.addEventListener('click', () => {
+            alert('Bill successfully saved / printed!');
+        });
+    </script>
 </body>
 </html>
