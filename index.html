@@ -2,52 +2,478 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TradeOS - Voice POS</title>
-    <link rel="stylesheet" href="style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>TradeOS - AI Mobile POS</title>
+    <style>
+        :root {
+            --bg-dark: #0f172a;
+            --card-bg: #1e293b;
+            --gold-accent: #f59e0b;
+            --gold-glow: rgba(245, 158, 11, 0.4);
+            --red-pulse: #ef4444;
+            --red-glow: rgba(239, 68, 68, 0.5);
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --border-color: #334155;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: #020617;
+            color: var(--text-main);
+            display: flex;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        .app-container {
+            width: 100%;
+            max-width: 440px;
+            background-color: var(--bg-dark);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            min-height: 100vh;
+            border-left: 1px solid var(--border-color);
+            border-right: 1px solid var(--border-color);
+            padding: 16px;
+        }
+
+        /* 1. Top Navigation Bar */
+        .top-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 14px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .brand-logo {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            color: #0f172a;
+            font-size: 18px;
+        }
+
+        .brand-name {
+            font-size: 20px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+
+        .brand-name span {
+            color: var(--gold-accent);
+        }
+
+        .lang-badge {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            color: var(--text-muted);
+            padding: 6px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        /* 2. Quick Summary Card */
+        .summary-card {
+            background: linear-gradient(145deg, #1e293b, #0f172a);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 16px;
+            margin-top: 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .summary-box p {
+            font-size: 12px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 4px;
+        }
+
+        .summary-box h2 {
+            font-size: 26px;
+            font-weight: 800;
+            color: var(--gold-accent);
+        }
+
+        .summary-box h3 {
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--text-main);
+            text-align: right;
+        }
+
+        /* 3. Real-time Text Log Area */
+        .log-section {
+            margin-top: 18px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .log-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .log-header span {
+            font-size: 13px;
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+
+        .status-pill {
+            font-size: 11px;
+            padding: 3px 10px;
+            border-radius: 12px;
+            background-color: rgba(148, 163, 184, 0.15);
+            color: var(--text-muted);
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .status-pill.listening {
+            background-color: rgba(239, 68, 68, 0.2);
+            color: #fca5a5;
+            border: 1px solid rgba(239, 68, 68, 0.4);
+        }
+
+        .live-text-box {
+            width: 100%;
+            flex-grow: 1;
+            min-height: 150px;
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 14px;
+            padding: 14px;
+            color: var(--text-main);
+            font-size: 16px;
+            line-height: 1.5;
+            resize: none;
+            outline: none;
+            transition: border-color 0.3s ease;
+        }
+
+        .live-text-box:focus {
+            border-color: var(--gold-accent);
+        }
+
+        /* 4. Main Action Area: Big Pulsing Mic Button */
+        .mic-area {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 24px 0;
+        }
+
+        .mic-btn {
+            width: 84px;
+            height: 84px;
+            border-radius: 50%;
+            border: none;
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            color: #0f172a;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 0 0 0 var(--gold-glow);
+            animation: pulse-gold 2s infinite;
+            transition: all 0.3s ease;
+        }
+
+        .mic-btn svg {
+            width: 36px;
+            height: 36px;
+            fill: currentColor;
+        }
+
+        /* Recording Active State (Red Pulse) */
+        .mic-btn.recording {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            color: #ffffff;
+            animation: pulse-red 1.2s infinite;
+            transform: scale(1.06);
+        }
+
+        .mic-hint {
+            margin-top: 12px;
+            font-size: 13px;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        @keyframes pulse-gold {
+            0% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.5); }
+            70% { box-shadow: 0 0 0 18px rgba(245, 158, 11, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0); }
+        }
+
+        @keyframes pulse-red {
+            0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); }
+            70% { box-shadow: 0 0 0 22px rgba(239, 68, 68, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+        }
+
+        /* 5. Clean Action Buttons */
+        .action-bar {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 10px;
+            padding-top: 10px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .action-btn {
+            padding: 12px 8px;
+            border-radius: 10px;
+            border: 1px solid var(--border-color);
+            background-color: var(--card-bg);
+            color: var(--text-main);
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .action-btn:active {
+            transform: scale(0.97);
+        }
+
+        .btn-clear {
+            color: #f87171;
+        }
+
+        .btn-save {
+            background-color: var(--gold-accent);
+            color: #0f172a;
+            border: none;
+        }
+    </style>
 </head>
 <body>
 
-    <div class="mobile-screen">
+<div class="app-container">
+    <!-- Top Navigation Bar -->
+    <header class="top-nav">
+        <div class="brand">
+            <div class="brand-logo">T</div>
+            <div class="brand-name">Trade<span>OS</span></div>
+        </div>
+        <button class="lang-badge" id="langToggle" title="Switch Recognition Language">
+            UR / EN
+        </button>
+    </header>
 
-        <header class="top-nav">
-            <h1>TradeOS</h1>
-            <p class="subtitle">Boliye aur Hisab Kijiye</p>
-        </header>
+    <!-- Quick Summary Card -->
+    <section class="summary-card">
+        <div class="summary-box">
+            <p>Total Bill</p>
+            <h2 id="totalAmount">Rs. 0</h2>
+        </div>
+        <div class="summary-box">
+            <p>Items Count</p>
+            <h3 id="itemsCount">0</h3>
+        </div>
+    </section>
 
-        <main class="action-area">
-            <button id="mic-btn" class="mic-button">
-                🎙️ Tap to Speak
-            </button>
-            <p id="status-text" class="status-msg">Sunne ke liye mic dabayein</p>
-        </main>
+    <!-- Real-time Text Log Area -->
+    <section class="log-section">
+        <div class="log-header">
+            <span>LIVE VOICE BILL LOG</span>
+            <span class="status-pill" id="statusBadge">Ready</span>
+        </div>
+        <textarea 
+            id="voiceLogInput" 
+            class="live-text-box" 
+            placeholder="Tap the mic button below and speak item & price (e.g., '2 kilo chini 300 rupay')..."></textarea>
+    </section>
 
-        <section class="log-area">
-            <p id="live-text">Aapka item yahan dikhega...</p>
-        </section>
+    <!-- Main Action Area: Single-tap Big Mic Button -->
+    <section class="mic-area">
+        <button class="mic-btn" id="micBtn" aria-label="Start Voice Recording">
+            <!-- Mic Icon SVG -->
+            <svg viewBox="0 0 24 24">
+                <path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3zm5.91-3c-.49 0-.9.36-.98.85C16.52 14.2 14.47 16 12 16s-4.52-1.8-4.93-4.15c-.08-.49-.49-.85-.98-.85-.61 0-1.09.54-1 1.14.49 3 2.89 5.35 5.91 5.78V20c0 .55.45 1 1 1s1-.45 1-1v-2.08c3.02-.43 5.42-2.78 5.91-5.78.1-.6-.39-1.14-1-1.14z"/>
+            </svg>
+        </button>
+        <p class="mic-hint" id="micHint">Tap Mic to Speak</p>
+    </section>
 
-        <section class="summary-card">
-            <h2>Bill Summary</h2>
-            <div class="bill-row">
-                <span>Item Name:</span>
-                <strong id="item-name">--</strong>
-            </div>
-            <div class="bill-row">
-                <span>Quantity:</span>
-                <strong id="item-qty">--</strong>
-            </div>
-            <div class="bill-row">
-                <span>Total Price:</span>
-                <strong id="item-total" class="gold-text">0 PKR</strong>
-            </div>
-        </section>
+    <!-- Clean Action Buttons -->
+    <footer class="action-bar">
+        <button class="action-btn btn-clear" id="clearBtn">Clear</button>
+        <button class="action-btn" id="shareBtn">Print / Share</button>
+        <button class="action-btn btn-save" id="saveBtn">Save Bill</button>
+    </footer>
+</div>
 
-        <footer class="action-buttons">
-            <button id="add-btn" class="btn-secondary">➕ Naya Item Jodein</button>
-            <button id="save-btn" class="btn-primary">💾 Bill Save / Print</button>
-        </footer>
+<script>
+    // DOM Elements
+    const micBtn = document.getElementById('micBtn');
+    const micHint = document.getElementById('micHint');
+    const statusBadge = document.getElementById('statusBadge');
+    const voiceLogInput = document.getElementById('voiceLogInput');
+    const clearBtn = document.getElementById('clearBtn');
+    const shareBtn = document.getElementById('shareBtn');
+    const saveBtn = document.getElementById('saveBtn');
+    const langToggle = document.getElementById('langToggle');
 
-    </div>
-<script src="script.js"></script>  
+    // Web Speech API Setup
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    let recognition = null;
+    let isRecording = false;
+    let finalTranscript = '';
+
+    // Language Mode ('ur-PK' handles Urdu + common English words smoothly)
+    let currentLang = 'ur-PK';
+
+    if (SpeechRecognition) {
+        recognition = new SpeechRecognition();
+        recognition.continuous = true;
+        recognition.interimResults = true;
+        recognition.lang = currentLang;
+
+        recognition.onstart = () => {
+            isRecording = true;
+            micBtn.classList.add('recording');
+            statusBadge.textContent = '● Listening...';
+            statusBadge.classList.add('listening');
+            micHint.textContent = 'Listening... Tap again to stop';
+        };
+
+        recognition.onresult = (event) => {
+            let interimTranscript = '';
+
+            for (let i = event.resultIndex; i < event.results.length; ++i) {
+                const transcript = event.results[i][0].transcript;
+                if (event.results[i].isFinal) {
+                    finalTranscript += (finalTranscript ? '\n' : '') + transcript.trim();
+                } else {
+                    interimTranscript += transcript;
+                }
+            }
+
+            // Display live spoken words inside the textarea
+            voiceLogInput.value = finalTranscript + (interimTranscript ? (finalTranscript ? '\n' : '') + interimTranscript : '');
+            voiceLogInput.scrollTop = voiceLogInput.scrollHeight;
+        };
+
+        recognition.onerror = (event) => {
+            console.error('Speech recognition error:', event.error);
+            statusBadge.textContent = 'Error: ' + event.error;
+            stopRecordingUI();
+        };
+
+        recognition.onend = () => {
+            stopRecordingUI();
+        };
+    } else {
+        statusBadge.textContent = 'Browser Not Supported';
+        micHint.textContent = 'Please use Google Chrome for Voice';
+        micBtn.disabled = true;
+        micBtn.style.opacity = '0.5';
+    }
+
+    function stopRecordingUI() {
+        isRecording = false;
+        micBtn.classList.remove('recording');
+        statusBadge.textContent = 'Ready';
+        statusBadge.classList.remove('listening');
+        micHint.textContent = 'Tap Mic to Speak';
+    }
+
+    // Mic Button Click Event
+    micBtn.addEventListener('click', () => {
+        if (!recognition) return;
+
+        if (isRecording) {
+            recognition.stop();
+        } else {
+            // Sync existing text in case user edited manually
+            finalTranscript = voiceLogInput.value.trim();
+            try {
+                recognition.start();
+            } catch (e) {
+                console.error(e);
+            }
+        }
+    });
+
+    // Toggle Language (Urdu-Pakistan vs English-US)
+    langToggle.addEventListener('click', () => {
+        if (isRecording) recognition.stop();
+        if (currentLang === 'ur-PK') {
+            currentLang = 'en-US';
+            langToggle.textContent = 'EN (US)';
+        } else {
+            currentLang = 'ur-PK';
+            langToggle.textContent = 'UR / EN';
+        }
+        if (recognition) recognition.lang = currentLang;
+    });
+
+    // Clear Button
+    clearBtn.addEventListener('click', () => {
+        finalTranscript = '';
+        voiceLogInput.value = '';
+        document.getElementById('totalAmount').textContent = 'Rs. 0';
+        document.getElementById('itemsCount').textContent = '0';
+    });
+
+    // Save Button (Placeholder feedback for next step)
+    saveBtn.addEventListener('click', () => {
+        if (!voiceLogInput.value.trim()) {
+            alert('Pehle kuch bol kar bill likhein!');
+            return;
+        }
+        alert('Bill log saved! Next step mein hum Smart Parser add karenge jo khud total nikalega.');
+    });
+
+    // Print / Share Button
+    shareBtn.addEventListener('click', () => {
+        if (!voiceLogInput.value.trim()) {
+            alert('Share karne ke liye bill khali hai.');
+            return;
+        }
+        if (navigator.share) {
+            navigator.share({
+                title: 'TradeOS Retail Bill',
+                text: voiceLogInput.value
+            }).catch(console.error);
+        } else {
+            window.print();
+        }
+    });
+</script>
+
 </body>
 </html>
